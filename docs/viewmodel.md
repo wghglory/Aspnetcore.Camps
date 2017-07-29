@@ -199,3 +199,107 @@ Now the get request result should be like below:
     "locationCountry": "USA"
 }
 ```
+
+---
+
+### Map Url Property
+
+We want to return url property like this: `"url": "http://localhost:5000/api/Camps/1"`. The easiest way is hard code url:
+
+```csharp
+using Aspnetcore.Camps.Api.ViewModels;
+using Aspnetcore.Camps.Model.Entities;
+using AutoMapper;
+
+namespace Aspnetcore.Camps.Api.Mappings
+{
+    public class CampProfile : Profile
+    {
+        public CampProfile()
+        {
+            CreateMap<Camp, CampViewModel>()
+                .ForMember(vm => vm.StartDate, opt => opt.MapFrom(entity => entity.EventDate))
+                .ForMember(vm => vm.EndDate,
+                    opt => opt.ResolveUsing(entity => entity.EventDate.AddDays(entity.Length - 1)))
+                .ForMember(vm => vm.Url, opt => opt.MapFrom(entity => $"/api/camps/{entity.Moniker}"));
+        }
+    }
+}
+```
+
+But it's not good for refactoring. The best way is to create a customized resolver. The tricky part is how and when we can access HttpContext. We cannot just put HttpContext in constructor because it's called before Url is valid. We need to put it in `OnActionExecuting`. We can even create a BaseController for it.
+
+```csharp
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+
+namespace Aspnetcore.Camps.Api.Controllers
+{
+    public abstract class BaseController : Controller
+    {
+        public const string Urlhelper = "URLHELPER";
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            base.OnActionExecuting(context);
+            context.HttpContext.Items[Urlhelper] = this.Url;
+        }
+    }
+}
+```
+
+CampUrlResolver.cs:
+
+```csharp
+using Aspnetcore.Camps.Api.Controllers;
+using Aspnetcore.Camps.Api.ViewModels;
+using Aspnetcore.Camps.Model.Entities;
+using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Aspnetcore.Camps.Api.Mappings
+{
+    public class CampUrlResolver : IValueResolver<Camp, CampViewModel, string>
+    {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public CampUrlResolver(IHttpContextAccessor httpContextAccessor)
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        public string Resolve(Camp source, CampViewModel destination, string destMember, ResolutionContext context)
+        {
+            var url = (IUrlHelper) _httpContextAccessor.HttpContext.Items[BaseController.Urlhelper];
+            return url.Link("CampGet", new {id = source.Id});
+        }
+    }
+}
+```
+
+Don't forget to configure DI in startup.cs
+
+```csharp
+services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+```
+
+Now get request should fill out the url property:
+
+```json
+{
+    "url": "http://localhost:5000/api/Camps/1",
+    "moniker": "ATL2016",
+    "name": "Your First Code Camp",
+    "startDate": "2017-09-12T00:00:00",
+    "endDate": "2017-09-12T00:00:00",
+    "description": "This is the first code camp",
+    "locationAddress1": "123 Main Street",
+    "locationAddress2": null,
+    "locationAddress3": null,
+    "locationCityTown": "Atlanta",
+    "locationStateProvince": "GA",
+    "locationPostalCode": "30303",
+    "locationCountry": "USA"
+}
+```

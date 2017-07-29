@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 namespace Aspnetcore.Camps.Api.Controllers
 {
     [Route("api/[controller]")]
-    public class CampsController : Controller
+    public class CampsController : BaseController
     {
         private readonly ILogger<CampsController> _logger;
         private readonly ICampRepository _repo;

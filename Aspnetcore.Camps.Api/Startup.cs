@@ -8,6 +8,7 @@ using Aspnetcore.Camps.Model.Repositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -49,6 +50,8 @@ namespace Aspnetcore.Camps.Api
                     opt.SerializerSettings.ReferenceLoopHandling =
                         ReferenceLoopHandling.Ignore;
                 });
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddAutoMapper();
         }
