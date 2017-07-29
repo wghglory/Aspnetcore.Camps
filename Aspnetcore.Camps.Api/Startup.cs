@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Aspnetcore.Camps.Model;
 using Aspnetcore.Camps.Model.Entities;
 using Aspnetcore.Camps.Model.Repositories;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -48,6 +49,8 @@ namespace Aspnetcore.Camps.Api
                     opt.SerializerSettings.ReferenceLoopHandling =
                         ReferenceLoopHandling.Ignore;
                 });
+
+            services.AddAutoMapper();
         }
 
         public void Configure(IApplicationBuilder app,

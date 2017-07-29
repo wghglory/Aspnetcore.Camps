@@ -14,7 +14,7 @@ namespace Aspnetcore.Camps.Model.Repositories
         Task<bool> SaveAllAsync();
 
         // Camps
-        IQueryable<Camp> GetAllCamps();
+        IEnumerable<Camp> GetAllCamps();
 
         Camp GetCamp(int id);
         Camp GetCampWithSpeakers(int id);
@@ -22,16 +22,16 @@ namespace Aspnetcore.Camps.Model.Repositories
         Camp GetCampByMonikerWithSpeakers(string moniker);
 
         // Speakers
-        IQueryable<Speaker> GetSpeakers(int id);
+        IEnumerable<Speaker> GetSpeakers(int id);
 
-        IQueryable<Speaker> GetSpeakersWithTalks(int id);
-        IQueryable<Speaker> GetSpeakersByMoniker(string moniker);
-        IQueryable<Speaker> GetSpeakersByMonikerWithTalks(string moniker);
+        IEnumerable<Speaker> GetSpeakersWithTalks(int id);
+        IEnumerable<Speaker> GetSpeakersByMoniker(string moniker);
+        IEnumerable<Speaker> GetSpeakersByMonikerWithTalks(string moniker);
         Speaker GetSpeaker(int speakerId);
         Speaker GetSpeakerWithTalks(int speakerId);
 
         // Talks
-        IQueryable<Talk> GetTalks(int speakerId);
+        IEnumerable<Talk> GetTalks(int speakerId);
 
         Talk GetTalk(int talkId);
 

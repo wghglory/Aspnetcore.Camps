@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Aspnetcore.Camps.Api.ViewModels;
 using Aspnetcore.Camps.Model.Entities;
 using Aspnetcore.Camps.Model.Repositories;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -12,19 +15,21 @@ namespace Aspnetcore.Camps.Api.Controllers
     {
         private readonly ILogger<CampsController> _logger;
         private readonly ICampRepository _repo;
+        private readonly IMapper _mapper;
 
-        public CampsController(ICampRepository repo, ILogger<CampsController> logger)
+        public CampsController(ICampRepository repo, ILogger<CampsController> logger, IMapper mapper)
         {
             _repo = repo;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpGet("")]
         public IActionResult Get()
         {
             var camps = _repo.GetAllCamps();
-
-            return Ok(camps);
+            // map IEnumerable<Camp> entity to IEnumerable<CampViewModel>
+            return Ok(_mapper.Map<IEnumerable<CampViewModel>>(camps));
         }
 
         [HttpGet("{id}", Name = "CampGet")]
@@ -35,8 +40,8 @@ namespace Aspnetcore.Camps.Api.Controllers
                 Camp camp = includeSpeakers ? _repo.GetCampWithSpeakers(id) : _repo.GetCamp(id);
 
                 if (camp == null) return NotFound($"Camp {id} was not found");
-
-                return Ok(camp);
+                // map Camp entity to CampViewModel
+                return Ok(_mapper.Map<CampViewModel>(camp));
             }
             catch
             {

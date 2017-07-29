@@ -26,7 +26,7 @@ namespace Aspnetcore.Camps.Model.Repositories
             _context.Remove(entity);
         }
 
-        public IQueryable<Camp> GetAllCamps()
+        public IEnumerable<Camp> GetAllCamps()
         {
             return _context.Camps.Include(c => c.Location).OrderBy(c => c.EventDate);
         }
@@ -60,26 +60,26 @@ namespace Aspnetcore.Camps.Model.Repositories
             return _context.Speakers.Include(s => s.Camp).FirstOrDefault(s => s.Id == speakerId);
         }
 
-        public IQueryable<Speaker> GetSpeakers(int id)
+        public IEnumerable<Speaker> GetSpeakers(int id)
         {
             return _context.Speakers.Include(s => s.Camp).Where(s => s.Camp.Id == id)
                 .OrderBy(s => s.Name);
         }
 
-        public IQueryable<Speaker> GetSpeakersWithTalks(int id)
+        public IEnumerable<Speaker> GetSpeakersWithTalks(int id)
         {
             return _context.Speakers.Include(s => s.Camp).Include(s => s.Talks)
                 .Where(s => s.Camp.Id == id).OrderBy(s => s.Name);
         }
 
-        public IQueryable<Speaker> GetSpeakersByMoniker(string moniker)
+        public IEnumerable<Speaker> GetSpeakersByMoniker(string moniker)
         {
             return _context.Speakers.Include(s => s.Camp)
                 .Where(s => s.Camp.Moniker.Equals(moniker, StringComparison.CurrentCultureIgnoreCase))
                 .OrderBy(s => s.Name);
         }
 
-        public IQueryable<Speaker> GetSpeakersByMonikerWithTalks(string moniker)
+        public IEnumerable<Speaker> GetSpeakersByMonikerWithTalks(string moniker)
         {
             return _context.Speakers.Include(s => s.Camp).Include(s => s.Talks)
                 .Where(s => s.Camp.Moniker.Equals(moniker, StringComparison.CurrentCultureIgnoreCase))
@@ -98,7 +98,7 @@ namespace Aspnetcore.Camps.Model.Repositories
                 .Where(t => t.Id == talkId).OrderBy(t => t.Title).FirstOrDefault();
         }
 
-        public IQueryable<Talk> GetTalks(int speakerId)
+        public IEnumerable<Talk> GetTalks(int speakerId)
         {
             return _context.Talks.Include(t => t.Speaker).ThenInclude(s => s.Camp)
                 .Where(t => t.Speaker.Id == speakerId).OrderBy(t => t.Title);
