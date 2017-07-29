@@ -9,7 +9,7 @@ namespace Aspnetcore.Camps.Model.Entities
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Moniker cannot be empty")]
         public string Moniker { get; set; }
 
         public string Name { get; set; }

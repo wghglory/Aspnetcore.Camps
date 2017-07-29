@@ -32,9 +32,7 @@ namespace Aspnetcore.Camps.Api.Controllers
         {
             try
             {
-                Camp camp = null;
-
-                camp = includeSpeakers ? _repo.GetCampWithSpeakers(id) : _repo.GetCamp(id);
+                Camp camp = includeSpeakers ? _repo.GetCampWithSpeakers(id) : _repo.GetCamp(id);
 
                 if (camp == null) return NotFound($"Camp {id} was not found");
 
@@ -58,6 +56,7 @@ namespace Aspnetcore.Camps.Api.Controllers
                 _repo.Add(model);
                 if (await _repo.SaveAllAsync())
                 {
+                    // after saving, we return the model just created
                     var newUri = Url.Link("CampGet", new {id = model.Id});
                     return Created(newUri, model);
                 }
@@ -75,7 +74,7 @@ namespace Aspnetcore.Camps.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] Model.Entities.Camp model)
+        public async Task<IActionResult> Put(int id, [FromBody] Camp model)
         {
             try
             {

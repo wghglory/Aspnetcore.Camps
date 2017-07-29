@@ -26,12 +26,9 @@ namespace Aspnetcore.Camps.Model.Repositories
             _context.Remove(entity);
         }
 
-        public IEnumerable<Camp> GetAllCamps()
+        public IQueryable<Camp> GetAllCamps()
         {
-            return _context.Camps
-                .Include(c => c.Location)
-                .OrderBy(c => c.EventDate)
-                .ToList();
+            return _context.Camps.Include(c => c.Location).OrderBy(c => c.EventDate);
         }
 
         public Camp GetCamp(int id)
@@ -63,30 +60,30 @@ namespace Aspnetcore.Camps.Model.Repositories
             return _context.Speakers.Include(s => s.Camp).FirstOrDefault(s => s.Id == speakerId);
         }
 
-        public IEnumerable<Speaker> GetSpeakers(int id)
+        public IQueryable<Speaker> GetSpeakers(int id)
         {
             return _context.Speakers.Include(s => s.Camp).Where(s => s.Camp.Id == id)
-                .OrderBy(s => s.Name).ToList();
+                .OrderBy(s => s.Name);
         }
 
-        public IEnumerable<Speaker> GetSpeakersWithTalks(int id)
+        public IQueryable<Speaker> GetSpeakersWithTalks(int id)
         {
             return _context.Speakers.Include(s => s.Camp).Include(s => s.Talks)
-                .Where(s => s.Camp.Id == id).OrderBy(s => s.Name).ToList();
+                .Where(s => s.Camp.Id == id).OrderBy(s => s.Name);
         }
 
-        public IEnumerable<Speaker> GetSpeakersByMoniker(string moniker)
+        public IQueryable<Speaker> GetSpeakersByMoniker(string moniker)
         {
             return _context.Speakers.Include(s => s.Camp)
                 .Where(s => s.Camp.Moniker.Equals(moniker, StringComparison.CurrentCultureIgnoreCase))
-                .OrderBy(s => s.Name).ToList();
+                .OrderBy(s => s.Name);
         }
 
-        public IEnumerable<Speaker> GetSpeakersByMonikerWithTalks(string moniker)
+        public IQueryable<Speaker> GetSpeakersByMonikerWithTalks(string moniker)
         {
             return _context.Speakers.Include(s => s.Camp).Include(s => s.Talks)
                 .Where(s => s.Camp.Moniker.Equals(moniker, StringComparison.CurrentCultureIgnoreCase))
-                .OrderBy(s => s.Name).ToList();
+                .OrderBy(s => s.Name);
         }
 
         public Speaker GetSpeakerWithTalks(int speakerId)
@@ -101,10 +98,10 @@ namespace Aspnetcore.Camps.Model.Repositories
                 .Where(t => t.Id == talkId).OrderBy(t => t.Title).FirstOrDefault();
         }
 
-        public IEnumerable<Talk> GetTalks(int speakerId)
+        public IQueryable<Talk> GetTalks(int speakerId)
         {
             return _context.Talks.Include(t => t.Speaker).ThenInclude(s => s.Camp)
-                .Where(t => t.Speaker.Id == speakerId).OrderBy(t => t.Title).ToList();
+                .Where(t => t.Speaker.Id == speakerId).OrderBy(t => t.Title);
         }
 
         public CampUser GetUser(string userName)

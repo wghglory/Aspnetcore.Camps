@@ -1,0 +1,104 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Camp",
+		"_postman_id": "82c99af2-72c4-39d1-308d-e90f85153d60",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:5000/api/camps",
+			"request": {
+				"url": "http://localhost:5000/api/camps",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"yuhan\",\n    \"eventdate\": \"2017-7-30\",\n    \"moniker\": \"ATL2017\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/camps/2",
+			"request": {
+				"url": "http://localhost:5000/api/camps/2",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/camps/1",
+			"request": {
+				"url": "http://localhost:5000/api/camps/1",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/camps",
+			"request": {
+				"url": "http://localhost:5000/api/camps",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/camps/2",
+			"request": {
+				"url": "http://localhost:5000/api/camps/2",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Jordan\",\n    \"description\":\"this is a put request\",\n    \"length\": 1,\n    \"location\": {\n    \t\"address1\": \"123 main street\",\n    \t\"cityTown\": \"Atlanta\",\n    \t\"stateProvince\": \"GA\"\n    }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/camps/2",
+			"request": {
+				"url": "http://localhost:5000/api/camps/2",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
