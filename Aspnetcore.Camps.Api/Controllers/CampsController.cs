@@ -104,11 +104,13 @@ namespace Aspnetcore.Camps.Api.Controllers
         {
             try
             {
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+
                 _logger.LogInformation("Creating a new Code Camp");
 
                 // reverse map, viewmodel --> entity
                 Camp camp = _mapper.Map<Camp>(model);
-                
+
                 _repo.Add(camp);
                 if (await _repo.SaveAllAsync())
                 {
@@ -125,7 +127,7 @@ namespace Aspnetcore.Camps.Api.Controllers
             {
                 _logger.LogError($"Threw exception while saving Camp: {ex}");
             }
-
+            
             return BadRequest();
         }
 
