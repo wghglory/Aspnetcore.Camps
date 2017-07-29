@@ -32,7 +32,7 @@ namespace Aspnetcore.Camps.Api.Controllers
             return Ok(_mapper.Map<IEnumerable<CampViewModel>>(camps));
         }
 
-        [HttpGet("{id}", Name = "CampGet")]
+        /*[HttpGet("{id}", Name = "CampGet")]
         public IActionResult Get(int id, bool includeSpeakers = false)
         {
             try
@@ -40,6 +40,27 @@ namespace Aspnetcore.Camps.Api.Controllers
                 Camp camp = includeSpeakers ? _repo.GetCampWithSpeakers(id) : _repo.GetCamp(id);
 
                 if (camp == null) return NotFound($"Camp {id} was not found");
+                // map Camp entity to CampViewModel
+                return Ok(_mapper.Map<CampViewModel>(camp));
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return BadRequest();
+        }*/
+
+        [HttpGet("{moniker}", Name = "CampGet")]
+        public IActionResult Get(string moniker, bool includeSpeakers = false)
+        {
+            try
+            {
+                Camp camp = includeSpeakers
+                    ? _repo.GetCampByMonikerWithSpeakers(moniker)
+                    : _repo.GetCampByMoniker(moniker);
+
+                if (camp == null) return NotFound($"Camp {moniker} was not found");
                 // map Camp entity to CampViewModel
                 return Ok(_mapper.Map<CampViewModel>(camp));
             }
