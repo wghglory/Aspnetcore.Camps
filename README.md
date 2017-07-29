@@ -49,3 +49,4 @@ import test/City.postman.json to postman and run test.
 * [ViewModel and AutoMapper](/docs/viewmodel.md)
 * [surrogate key](/docs/surrogateKey.md)
 * [Reverse Mapping in Post request](docs/automapper-in-post.md)
+* [Reverse Mapping in Put request](docs/automapper-in-put.md)

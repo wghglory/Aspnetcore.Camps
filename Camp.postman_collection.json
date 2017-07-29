@@ -99,6 +99,77 @@
 				"description": ""
 			},
 			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/camps",
+			"request": {
+				"url": "http://localhost:5000/api/camps",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"yuhan\",\n    \"startDate\": \"2017-7-30\",\n    \"enddate\": \"2017-8-10\",\n    \"moniker\": \"ATL2017\",\n    \"locationAddress1\": \"shanghai\",\n    \"locationStateProvince\": \"Shanghai\",\n    \"locationCountry\": \"China\",\n    \"description\": \"i love shanghai, but it's too hot in summer\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/camps/alt2019",
+			"request": {
+				"url": "http://localhost:5000/api/camps/camp202",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"moniker\": \"camp202\",\n\t\"name\": \"Guanghui\",\n    \"description\":\"this is a new put request\",\n    \"locationAddress1\": \"444 main street\",\n    \"locationcityTown\": \"Dalian\",\n    \"locationstateProvince\": \"Liaoning\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/camps/camp202",
+			"request": {
+				"url": "http://localhost:5000/api/camps/ATL2017",
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n      \"op\": \"replace\",\n      \"path\": \"/Name\",\n      \"value\": \"Patch request\"\n    },{\n      \"op\": \"replace\",\n      \"path\": \"/Description\",\n      \"value\": \"Patch request for description\"\n    }\n]"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/camps/camp202",
+			"request": {
+				"url": "http://localhost:5000/api/camps/camp202",
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }
