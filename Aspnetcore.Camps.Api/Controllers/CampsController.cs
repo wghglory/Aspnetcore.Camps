@@ -72,7 +72,7 @@ namespace Aspnetcore.Camps.Api.Controllers
             return BadRequest();
         }
 
-        [HttpPost]
+        /*[HttpPost]
         public async Task<IActionResult> Post([FromBody] Camp model)
         {
             try
@@ -85,6 +85,36 @@ namespace Aspnetcore.Camps.Api.Controllers
                     // after saving, we return the model just created
                     var newUri = Url.Link("CampGet", new {id = model.Id});
                     return Created(newUri, model);
+                }
+                else
+                {
+                    _logger.LogWarning("Could not save Camp to the database");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Threw exception while saving Camp: {ex}");
+            }
+
+            return BadRequest();
+        }*/
+
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] CampViewModel model)
+        {
+            try
+            {
+                _logger.LogInformation("Creating a new Code Camp");
+
+                // reverse map, viewmodel --> entity
+                Camp camp = _mapper.Map<Camp>(model);
+                
+                _repo.Add(camp);
+                if (await _repo.SaveAllAsync())
+                {
+                    // after saving, we return the model just created
+                    var newUri = Url.Link("CampGet", new {Moniker = model.Moniker});
+                    return Created(newUri, _mapper.Map<CampViewModel>(camp));
                 }
                 else
                 {

@@ -44,7 +44,8 @@ import test/City.postman.json to postman and run test.
 
 .Net Core default supports log information in output window. If you want to log everything in file, install `NLog.Extensions.Logging`.
 
-## Further Optimization
+## Use AutoMapper
 
-1. Create ViewModels for read, update, delete instead of exposing entity directly when calling api (safer, lightweight)
-1. Use AutoMapper to convert between ViewModels and Entities
+* [ViewModel and AutoMapper](/docs/viewmodel.md)
+* [surrogate key](/docs/surrogateKey.md)
+* [Reverse Mapping in Post request](docs/automapper-in-post.md)
