@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,15 +29,17 @@ namespace Aspnetcore.Camps.Api
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+            Env = env;
         }
 
         public IConfigurationRoot Configuration { get; }
+        public IHostingEnvironment Env { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(Configuration);
-            
+
             services.AddDbContext<CampContext>(
                     o => o.UseMySql(Configuration.GetConnectionString("MysqlConnection")))
                 .AddIdentity<CampUser, IdentityRole>();
@@ -45,8 +48,16 @@ namespace Aspnetcore.Camps.Api
 
             services.AddTransient<CampDbInitializer>();
 
-            // Add framework services.
-            services.AddMvc()
+            services.AddMvc(opt =>
+                {
+//                    // use Windows Visual Studio to enable ssl 
+//                    // http will redirect to https
+//                    if (!Env.IsProduction())
+//                    {
+//                        opt.SslPort = 44388;
+//                    }
+//                    opt.Filters.Add(new RequireHttpsAttribute()); //support ssl
+                })
                 .AddJsonOptions(opt =>
                 {
                     opt.SerializerSettings.ReferenceLoopHandling =

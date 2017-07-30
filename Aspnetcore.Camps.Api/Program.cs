@@ -13,7 +13,9 @@ namespace Aspnetcore.Camps.Api
         public static void Main(string[] args)
         {
             var host = new WebHostBuilder()
-                .UseKestrel()
+                // enable ssl for mac or non-visual-studio environment
+                .UseKestrel(opt => opt.UseHttps("localhost.pfx", "123123"))
+                .UseUrls("https://*:44388")
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
