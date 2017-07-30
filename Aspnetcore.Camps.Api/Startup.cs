@@ -35,6 +35,8 @@ namespace Aspnetcore.Camps.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(Configuration);
+            
             services.AddDbContext<CampContext>(
                     o => o.UseMySql(Configuration.GetConnectionString("MysqlConnection")))
                 .AddIdentity<CampUser, IdentityRole>();
