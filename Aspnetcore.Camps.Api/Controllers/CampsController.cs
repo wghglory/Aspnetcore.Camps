@@ -6,6 +6,7 @@ using Aspnetcore.Camps.Api.ViewModels;
 using Aspnetcore.Camps.Model.Entities;
 using Aspnetcore.Camps.Model.Repositories;
 using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -13,7 +14,8 @@ using Microsoft.Extensions.Logging;
 namespace Aspnetcore.Camps.Api.Controllers
 {
     [Route("api/[controller]")]
-    [ValidateModel]
+    [ValidateModel]  
+    [EnableCors("AnyGET")]
     public class CampsController : BaseController
     {
         private readonly ILogger<CampsController> _logger;
@@ -154,7 +156,7 @@ namespace Aspnetcore.Camps.Api.Controllers
             return BadRequest();
         }
 
-
+        [EnableCors("Wildermuth")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CampViewModel model)
         {

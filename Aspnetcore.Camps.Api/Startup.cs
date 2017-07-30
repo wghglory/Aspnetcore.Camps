@@ -67,6 +67,24 @@ namespace Aspnetcore.Camps.Api
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddAutoMapper();
+
+            // create cors policy, any controller/action can use these policies
+            services.AddCors(cfg =>
+            {
+                cfg.AddPolicy("Wildermuth", builder =>
+                {
+                    builder.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .WithOrigins("http://wildermuth.com");
+                });
+
+                cfg.AddPolicy("AnyGET", builder =>
+                {
+                    builder.AllowAnyHeader()
+                        .WithMethods("GET")
+                        .AllowAnyOrigin();
+                });
+            });
         }
 
         public void Configure(IApplicationBuilder app,
@@ -76,6 +94,14 @@ namespace Aspnetcore.Camps.Api
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            /*// globally enable cors. usually won't use this
+            app.UseCors(cfg =>
+            {
+                cfg.AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .WithOrigins("http://wildermuth.com");
+            });*/
 
             app.UseMvc();
 

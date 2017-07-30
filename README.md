@@ -52,3 +52,4 @@ import test/City.postman.json to postman and run test.
 * [Mapping source to destination in Put request](docs/automapper-in-put.md)
 * [Create Model Validation Action Filter](/docs/filter.md)
 * [SSL](/docs/ssl.md)
+* [CORS](/docs/cors.md)
