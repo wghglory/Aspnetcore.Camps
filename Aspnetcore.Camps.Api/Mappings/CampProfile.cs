@@ -26,7 +26,18 @@ namespace Aspnetcore.Camps.Api.Mappings
                     StateProvince = vm.LocationStateProvince,
                     PostalCode = vm.LocationPostalCode,
                     Country = vm.LocationCountry
-                }));
+                }))
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); // ignore null fields of source when mapping
+
+            CreateMap<Speaker, SpeakerViewModel>()
+                .ForMember(s => s.Url, opt => opt.ResolveUsing<SpeakerUrlResolver>())
+                .ReverseMap()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<Talk, TalkViewModel>()
+                .ForMember(s => s.Url, opt => opt.ResolveUsing<TalkUrlResolver>())
+                .ReverseMap()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

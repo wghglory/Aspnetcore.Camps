@@ -8,168 +8,366 @@
 	},
 	"item": [
 		{
-			"name": "http://localhost:5000/api/camps",
-			"request": {
-				"url": "http://localhost:5000/api/camps",
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
+			"name": "CampsController",
+			"description": "",
+			"item": [
+				{
+					"name": "http://localhost:5000/api/camps",
+					"request": {
+						"url": "http://localhost:5000/api/camps",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"yuhan\",\n    \"eventdate\": \"2017-7-30\",\n    \"moniker\": \"ATL2017\"\n}"
+						},
 						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\":\"yuhan\",\n    \"eventdate\": \"2017-7-30\",\n    \"moniker\": \"ATL2017\"\n}"
+					},
+					"response": []
 				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "http://localhost:5000/api/camps/2",
-			"request": {
-				"url": "http://localhost:5000/api/camps/2",
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "http://localhost:5000/api/camps/1",
-			"request": {
-				"url": "http://localhost:5000/api/camps/1",
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "http://localhost:5000/api/camps",
-			"request": {
-				"url": "http://localhost:5000/api/camps",
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "http://localhost:5000/api/camps/2",
-			"request": {
-				"url": "http://localhost:5000/api/camps/2",
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
+				{
+					"name": "http://localhost:5000/api/camps/2",
+					"request": {
+						"url": "http://localhost:5000/api/camps/2",
+						"method": "GET",
+						"header": [],
+						"body": {},
 						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"name\": \"Jordan\",\n    \"description\":\"this is a put request\",\n    \"length\": 1,\n    \"location\": {\n    \t\"address1\": \"123 main street\",\n    \t\"cityTown\": \"Atlanta\",\n    \t\"stateProvince\": \"GA\"\n    }\n}"
+					},
+					"response": []
 				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "http://localhost:5000/api/camps/2",
-			"request": {
-				"url": "http://localhost:5000/api/camps/2",
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
+				{
+					"name": "http://localhost:5000/api/camps/1",
+					"request": {
+						"url": "http://localhost:5000/api/camps/1",
+						"method": "GET",
+						"header": [],
+						"body": {},
 						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
+					},
+					"response": []
 				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "http://localhost:5000/api/camps",
-			"request": {
-				"url": "http://localhost:5000/api/camps",
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
+				{
+					"name": "http://localhost:5000/api/camps",
+					"request": {
+						"url": "http://localhost:5000/api/camps",
+						"method": "GET",
+						"header": [],
+						"body": {},
 						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\":\"yuhan\",\n    \"startDate\": \"2017-7-30\",\n    \"enddate\": \"2017-8-10\",\n    \"moniker\": \"ATL2017\",\n    \"locationAddress1\": \"shanghai\",\n    \"locationStateProvince\": \"Shanghai\",\n    \"locationCountry\": \"China\",\n    \"description\": \"i love shanghai, but it's too hot in summer\"\n}"
+					},
+					"response": []
 				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "http://localhost:5000/api/camps/alt2019",
-			"request": {
-				"url": "http://localhost:5000/api/camps/camp202",
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
+				{
+					"name": "http://localhost:5000/api/camps/2",
+					"request": {
+						"url": "http://localhost:5000/api/camps/2",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Jordan\",\n    \"description\":\"this is a put request\",\n    \"length\": 1,\n    \"location\": {\n    \t\"address1\": \"123 main street\",\n    \t\"cityTown\": \"Atlanta\",\n    \t\"stateProvince\": \"GA\"\n    }\n}"
+						},
 						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"moniker\": \"camp202\",\n\t\"name\": \"Guanghui\",\n    \"description\":\"this is a new put request\",\n    \"locationAddress1\": \"444 main street\",\n    \"locationcityTown\": \"Dalian\",\n    \"locationstateProvince\": \"Liaoning\"\n}"
+					},
+					"response": []
 				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "http://localhost:5000/api/camps/camp202",
-			"request": {
-				"url": "http://localhost:5000/api/camps/ATL2017",
-				"method": "PATCH",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
+				{
+					"name": "http://localhost:5000/api/camps/2",
+					"request": {
+						"url": "http://localhost:5000/api/camps/2",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "[\n    {\n      \"op\": \"replace\",\n      \"path\": \"/Name\",\n      \"value\": \"Patch request\"\n    },{\n      \"op\": \"replace\",\n      \"path\": \"/Description\",\n      \"value\": \"Patch request for description\"\n    }\n]"
+					},
+					"response": []
 				},
-				"description": ""
-			},
-			"response": []
+				{
+					"name": "http://localhost:5000/api/camps",
+					"request": {
+						"url": "http://localhost:5000/api/camps",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"yuhan\",\n    \"startDate\": \"2017-7-30\",\n    \"enddate\": \"2017-8-10\",\n    \"moniker\": \"ATL2017\",\n    \"locationAddress1\": \"shanghai\",\n    \"locationStateProvince\": \"Shanghai\",\n    \"locationCountry\": \"China\",\n    \"description\": \"i love shanghai, but it's too hot in summer\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:5000/api/camps/alt2019",
+					"request": {
+						"url": "http://localhost:5000/api/camps/camp202",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"moniker\": \"camp202\",\n\t\"name\": \"Guanghui\",\n    \"description\":\"this is a new put request\",\n    \"locationAddress1\": \"444 main street\",\n    \"locationcityTown\": \"Dalian\",\n    \"locationstateProvince\": \"Liaoning\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:5000/api/camps/camp202",
+					"request": {
+						"url": "http://localhost:5000/api/camps/ATL2017",
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n      \"op\": \"replace\",\n      \"path\": \"/Name\",\n      \"value\": \"Patch request\"\n    },{\n      \"op\": \"replace\",\n      \"path\": \"/Description\",\n      \"value\": \"Patch request for description\"\n    }\n]"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:5000/api/camps/camp202",
+					"request": {
+						"url": "http://localhost:5000/api/camps/camp202",
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
 		},
 		{
-			"name": "http://localhost:5000/api/camps/camp202",
-			"request": {
-				"url": "http://localhost:5000/api/camps/camp202",
-				"method": "DELETE",
-				"header": [],
-				"body": {},
-				"description": ""
-			},
-			"response": []
+			"name": "SpeakersController",
+			"description": "",
+			"item": [
+				{
+					"name": "http://localhost:5000/api/camps/ATL2016/speakers",
+					"request": {
+						"url": "http://localhost:5000/api/camps/ATL2016/speakers",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:5000/api/camps/ATL2016/speakers/1",
+					"request": {
+						"url": "http://localhost:5000/api/camps/ATL2016/speakers/1",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:5000/api/camps/ATL2016/speakers/1?includetalks=true",
+					"request": {
+						"url": {
+							"raw": "http://localhost:5000/api/camps/ATL2016/speakers/1?includetalks=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"camps",
+								"ATL2016",
+								"speakers",
+								"1"
+							],
+							"query": [
+								{
+									"key": "includetalks",
+									"value": "true",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:5000/api/camps/ATL2016/speakers",
+					"request": {
+						"url": "http://localhost:5000/api/camps/ATL2016/speakers",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"New Talsk haha\",\n    \"campanyname\": \"changjiang\",\n    \"phonenumber\": \"123123\",\n    \"websiteUrl\": \"http://google.com\",\n    \"bio\": \"he is goo he is good df  fdsf fd afdfas fadfs  f\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:5000/api/camps/ATL2016/speakers/1",
+					"request": {
+						"url": "http://localhost:5000/api/camps/ATL2016/speakers/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Talsk haha\",\n    \"campanyname\": \"changjiang\",\n    \"phonenumber\": \"34243234\",\n    \"websiteUrl\": \"http://google.com\",\n    \"bio\": \"he is goo he is good df  fdsf fd afdfas fadfs  f\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:5000/api/camps/ATL2016/speakers/3",
+					"request": {
+						"url": "http://localhost:5000/api/camps/ATL2016/speakers/3",
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TalksController",
+			"description": "",
+			"item": [
+				{
+					"name": "http://localhost:5000/api/camps/ATL2016/speakers/1/talks",
+					"request": {
+						"url": "http://localhost:5000/api/camps/ATL2016/speakers/1/talks",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:5000/api/camps/ATL2016/speakers/1/talks/1",
+					"request": {
+						"url": "http://localhost:5000/api/camps/ATL2016/speakers/1/talks/1",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:5000/api/camps/ATL2016/speakers/1/talks",
+					"request": {
+						"url": "http://localhost:5000/api/camps/ATL2016/speakers/1/talks",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"ja\",\n\t\"abstract\": \"javascript\",\n\t\"category\": \"tech\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:5000/api/camps/ATL2016/speakers/1/talks/4",
+					"request": {
+						"url": "http://localhost:5000/api/camps/ATL2016/speakers/1/talks/4",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"js\",\n\t\"abstract\": \"javascript\",\n\t\"category\": \"tech\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:5000/api/camps/ATL2016/speakers/1/talks/4",
+					"request": {
+						"url": "http://localhost:5000/api/camps/ATL2016/speakers/1/talks/4",
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

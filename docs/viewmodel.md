@@ -12,7 +12,7 @@ So that's why we need a viewModel! To save more time, use `AutoMapper`
 
 ## AutoMapper
 
-1. Install `AutoMapper.Extensions.Microsoft.DependencyInjection` from Nuget.
+1. Install `AutoMapper.Extensions.Microsoft.DependencyInjection` from Nuget. (Version="2.0.1", which automatically install AutoMapper 6.0.0)
 
 1. In Startup.cs `ConfigureServices(IServiceCollection services)` method add: `services.AddAutoMapper();`
 
@@ -302,4 +302,13 @@ Now get request should fill out the url property:
     "locationPostalCode": "30303",
     "locationCountry": "USA"
 }
+```
+
+### Ignore null fields of source when mapping
+
+Suppose in database we have a record with fields `"firstName":"guanghui", "lastName":"Wang"`. When user submits the form, he only fills out firstName but lastName is empty. In our Put Request, the null lastName field will make the database's lastName null. Actually we want to AutoMapper to ignore the null field mapping. This is especially a necessary feature for Put Request. And we don't need Patch request if we can make this goal happen. To do this:
+
+```csharp
+CreateMap<Speaker, SpeakerViewModel>()
+    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 ```

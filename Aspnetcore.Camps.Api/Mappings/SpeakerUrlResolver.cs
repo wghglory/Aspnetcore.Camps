@@ -7,21 +7,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Aspnetcore.Camps.Api.Mappings
 {
-    public class CampUrlResolver : IValueResolver<Camp, CampViewModel, string>
+    public class SpeakerUrlResolver : IValueResolver<Speaker, SpeakerViewModel, string>
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CampUrlResolver(IHttpContextAccessor httpContextAccessor)
+        public SpeakerUrlResolver(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
 
-
-        public string Resolve(Camp source, CampViewModel destination, string destMember, ResolutionContext context)
+        public string Resolve(Speaker source, SpeakerViewModel destination, string destMember,
+            ResolutionContext context)
         {
             var url = (IUrlHelper) _httpContextAccessor.HttpContext.Items[BaseController.Urlhelper];
-//            return url.Link("GetCamp", new {id = source.Id});
-            return url.Link("GetCamp", new {moniker = source.Moniker});
+            return url.Link("GetSpeaker", new {moniker = source.Camp.Moniker, id = source.Id});
         }
     }
 }

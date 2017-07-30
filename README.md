@@ -24,7 +24,7 @@ namespace Aspnetcore.CityInfo.Api.Entities
 ## 2 Code-First Seed Ways
 
 1. AppDbContextExtensions.cs
-1. DbInitializer.cs
+2. DbInitializer.cs
 
 ## Caveat
 
@@ -49,4 +49,5 @@ import test/City.postman.json to postman and run test.
 * [ViewModel and AutoMapper](/docs/viewmodel.md)
 * [surrogate key](/docs/surrogateKey.md)
 * [Reverse Mapping in Post request](docs/automapper-in-post.md)
-* [Reverse Mapping in Put request](docs/automapper-in-put.md)
+* [Mapping source to destination in Put request](docs/automapper-in-put.md)
+* [Create Model Validation Action Filter](/docs/filter.md)

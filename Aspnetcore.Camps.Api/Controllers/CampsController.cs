@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Aspnetcore.Camps.Api.Filters;
 using Aspnetcore.Camps.Api.ViewModels;
 using Aspnetcore.Camps.Model.Entities;
 using Aspnetcore.Camps.Model.Repositories;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Logging;
 namespace Aspnetcore.Camps.Api.Controllers
 {
     [Route("api/[controller]")]
+    [ValidateModel]
     public class CampsController : BaseController
     {
         private readonly ILogger<CampsController> _logger;
@@ -33,7 +35,7 @@ namespace Aspnetcore.Camps.Api.Controllers
             return Ok(_mapper.Map<IEnumerable<CampViewModel>>(camps));
         }
 
-        /*[HttpGet("{id}", Name = "CampGet")]
+        /*[HttpGet("{id}", Name = "GetCamp")]
         public IActionResult Get(int id, bool includeSpeakers = false)
         {
             try
@@ -63,7 +65,7 @@ namespace Aspnetcore.Camps.Api.Controllers
                 if (await _repo.SaveAllAsync())
                 {
                     // after saving, we return the model just created
-                    var newUri = Url.Link("CampGet", new {id = model.Id});
+                    var newUri = Url.Link("GetCamp", new {id = model.Id});
                     return Created(newUri, model);
                 }
                 else
@@ -131,7 +133,7 @@ namespace Aspnetcore.Camps.Api.Controllers
         */
 
 
-        [HttpGet("{moniker}", Name = "CampGet")]
+        [HttpGet("{moniker}", Name = "GetCamp")]
         public IActionResult Get(string moniker, bool includeSpeakers = false)
         {
             try
@@ -158,7 +160,7 @@ namespace Aspnetcore.Camps.Api.Controllers
         {
             try
             {
-                if (!ModelState.IsValid) return BadRequest(ModelState);
+//                if (!ModelState.IsValid) return BadRequest(ModelState);   //not needed because of ValidateModel Filter
 
                 _logger.LogInformation("Creating a new Code Camp");
 
@@ -169,7 +171,7 @@ namespace Aspnetcore.Camps.Api.Controllers
                 if (await _repo.SaveAllAsync())
                 {
                     // after saving, we return the model just created
-                    var newUri = Url.Link("CampGet", new {Moniker = model.Moniker});
+                    var newUri = Url.Link("GetCamp", new {Moniker = model.Moniker});
                     return Created(newUri, _mapper.Map<CampViewModel>(camp));
                 }
                 else
@@ -190,7 +192,7 @@ namespace Aspnetcore.Camps.Api.Controllers
         {
             try
             {
-                if (!ModelState.IsValid) return BadRequest(ModelState);
+//                if (!ModelState.IsValid) return BadRequest(ModelState);  //not needed because of ValidateModel Filter
 
                 var oldCamp = _repo.GetCampByMoniker(moniker);
                 if (oldCamp == null) return NotFound($"Could not find a camp with an Moniker of {moniker}");
@@ -222,7 +224,7 @@ namespace Aspnetcore.Camps.Api.Controllers
         {
             try
             {
-                if (!ModelState.IsValid) return BadRequest(ModelState);
+//                if (!ModelState.IsValid) return BadRequest(ModelState);  //not needed because of ValidateModel Filter
 
                 var oldCamp = _repo.GetCampByMoniker(moniker);
                 if (oldCamp == null) return NotFound($"Could not find a camp with an Moniker of {moniker}");
