@@ -337,3 +337,232 @@ namespace Aspnetcore.Camps.Api.Controllers
     }
 }
 ```
+
+---
+
+### Token authentication
+
+JSON Web Tokens (JWT)
+
+- Industry Standard for tokens
+- Self-contained, small and complete
+  - Credentials
+  - Claims
+  - Other Information
+
+Structure of JWT
+
+```json
+// Header
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+// payload
+{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "admin": true
+}
+```
+
+![Token authentication](http://om1o84p1p.bkt.clouddn.com/1501428006.png?imageMogr2/thumbnail/!70p)
+
+Install packages:
+
+```xml
+<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="1.1.2" />
+<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.1.4" />
+```
+
+Add token config to `appsettings.json`
+
+```json
+"Tokens": {
+    "Key": "FooBarQuuxIsTheStandardTypeOfStringWeUse12345",
+    "Issuer": "http://mycodecamp.io",
+    "Audience": "http://mycodecamp.io"
+}
+```
+
+#### Generating JWT in AuthController.cs
+
+```csharp
+// ...
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+
+namespace Aspnetcore.Camps.Api.Controllers
+{
+    public class AuthController : Controller
+    {
+        private readonly ILogger<AuthController> _logger;
+        private readonly UserManager<CampUser> _userMgr;
+        private readonly IPasswordHasher<CampUser> _hasher;
+        private readonly IConfigurationRoot _config;
+
+        public AuthController(CampContext context,
+            UserManager<CampUser> userMgr,
+            IPasswordHasher<CampUser> hasher,
+            ILogger<AuthController> logger,
+            IConfigurationRoot config)
+        {
+            _logger = logger;
+            _userMgr = userMgr;
+            _hasher = hasher;
+            _config = config;
+        }
+
+        // token authentication
+        //System.IdentityModel.Tokens.Jwt
+        //Microsoft.AspNetCore.Authentication.JwtBearer
+        [ValidateModel]
+        [HttpPost("api/auth/token")]
+        public async Task<IActionResult> CreateToken([FromBody] CredentialModel model)
+        {
+            try
+            {
+                var user = await _userMgr.FindByNameAsync(model.UserName);
+                if (user != null)
+                {
+                    if (_hasher.VerifyHashedPassword(user, user.PasswordHash, model.Password) ==
+                        PasswordVerificationResult.Success)
+                    {
+                        // from database, see CampIdentityInitializer
+                        var userClaims = await _userMgr.GetClaimsAsync(user);
+
+                        var claims = new[]
+                        {
+                            new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                            new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
+                            new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
+                            new Claim(JwtRegisteredClaimNames.Email, user.Email)
+                        }.Union(userClaims);
+
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
+                        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                        var token = new JwtSecurityToken(
+                            issuer: _config["Tokens:Issuer"],
+                            audience: _config["Tokens:Audience"],
+                            claims: claims,
+                            expires: DateTime.UtcNow.AddMinutes(15),
+                            signingCredentials: creds
+                        );
+
+                        return Ok(new
+                        {
+                            token = new JwtSecurityTokenHandler().WriteToken(token),
+                            expiration = token.ValidTo
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception thrown while creating JWT: {ex}");
+            }
+
+            return BadRequest("Failed to generate token");
+        }
+
+        public async void SignOut()
+        {
+            await _signInMgr.SignOutAsync();
+        }
+    }
+}
+```
+
+#### Configure JWT middleware in Startup.cs Configuration method
+
+```csharp
+app.UseIdentity();
+
+app.UseJwtBearerAuthentication(new JwtBearerOptions()
+{
+    AutomaticAuthenticate = true,
+    AutomaticChallenge = true,
+    TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidIssuer = Configuration["Tokens:Issuer"],
+        ValidAudience = Configuration["Tokens:Audience"],
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])),
+        ValidateLifetime = true
+    }
+});
+
+app.UseMvc();
+```
+
+#### Validate JWT
+
+When you send post request to `api/auth/token` with correct credentials, the server will response you the token:
+
+```json
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3Z2hnbG9yeSIsImp0aSI6ImI1ZTk0Njg1LTg1YTctNDdjNi05ZjU4LTM0YWU3OWJmNDNkMiIsImdpdmVuX25hbWUiOiJHdWFuZ2h1aSIsImZhbWlseV9uYW1lIjoiV2FuZyIsImVtYWlsIjoiaGVsbG9AZ21haWwuY29tIiwiU3VwZXJVc2VyIjoiVHJ1ZSIsImV4cCI6MTUwMTQyNjc1NiwiaXNzIjoiaHR0cDovL215Y29kZWNhbXAuaW8iLCJhdWQiOiJodHRwOi8vbXljb2RlY2FtcC5pbyJ9.DHsOD8119RtLNAYKd_FZLlFTToeP5qY1xjgc8k7lhro",
+    "expiration": "2017-07-30T14:59:16Z"
+}
+```
+
+Now when you try to access other resources, you need to pass along the token that generated by server.
+
+Get request <https://localhost:44388/api/camps/ATL2016/speakers/1> with HEADER:
+
+Key: `Authorization`
+Value: `bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3Z2hnbG9yeSIsImp0aSI6ImI1ZTk0Njg1LTg1YTctNDdjNi05ZjU4LTM0YWU3OWJmNDNkMiIsImdpdmVuX25hbWUiOiJHdWFuZ2h1aSIsImZhbWlseV9uYW1lIjoiV2FuZyIsImVtYWlsIjoiaGVsbG9AZ21haWwuY29tIiwiU3VwZXJVc2VyIjoiVHJ1ZSIsImV4cCI6MTUwMTQyNjc1NiwiaXNzIjoiaHR0cDovL215Y29kZWNhbXAuaW8iLCJhdWQiOiJodHRwOi8vbXljb2RlY2FtcC5pbyJ9.DHsOD8119RtLNAYKd_FZLlFTToeP5qY1xjgc8k7lhro`
+
+If you paste the token to <https://jwt.io>, it can decode the header and payload.
+
+#### Allow only SuperUsers access (Claims in JWT)
+
+Startup.cs ConfigureServices(IServiceCollection services):
+
+```csharp
+services.AddAuthorization(cfg =>
+{
+    cfg.AddPolicy("SuperUsers", p => p.RequireClaim("SuperUser", "True"));
+});
+```
+
+CampsController.cs
+
+```diff
++ [Authorize(Policy = "SuperUsers")]
+[EnableCors("Wildermuth")]
+[HttpPost]
+public async Task<IActionResult> Post([FromBody] CampViewModel model)
+{
+    try
+    {
+        _logger.LogInformation("Creating a new Code Camp");
+
+        // reverse map, viewmodel --> entity
+        Camp camp = _mapper.Map<Camp>(model);
+
+        _repo.Add(camp);
+        if (await _repo.SaveAllAsync())
+        {
+            // after saving, we return the model just created
+            var newUri = Url.Link("GetCamp", new {Moniker = model.Moniker});
+            return Created(newUri, _mapper.Map<CampViewModel>(camp));
+        }
+        else
+        {
+            _logger.LogWarning("Could not save Camp to the database");
+        }
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError($"Threw exception while saving Camp: {ex}");
+    }
+
+    return BadRequest();
+}
+```
+
+When user logins in, and if he is the superUser (checked by Identity: `var userClaims = await _userMgr.GetClaimsAsync(user);`), he can send post request. Don't forget to add the JWT in HEADER even in post request.

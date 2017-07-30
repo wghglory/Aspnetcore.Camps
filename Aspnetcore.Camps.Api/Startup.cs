@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Text;
 using System.Threading.Tasks;
 using Aspnetcore.Camps.Model;
 using Aspnetcore.Camps.Model.Entities;
@@ -11,12 +9,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Aspnetcore.Camps.Api
 {
@@ -102,6 +100,11 @@ namespace Aspnetcore.Camps.Api
                     };
             });
 
+            services.AddAuthorization(cfg =>
+            {
+                cfg.AddPolicy("SuperUsers", p => p.RequireClaim("SuperUser", "True"));
+            });
+
             services.AddMvc(opt =>
                 {
 //                    // use Windows Visual Studio to enable ssl 
@@ -137,6 +140,20 @@ namespace Aspnetcore.Camps.Api
             });*/
 
             app.UseIdentity();
+
+            app.UseJwtBearerAuthentication(new JwtBearerOptions()
+            {
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true,
+                TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidIssuer = Configuration["Tokens:Issuer"],
+                    ValidAudience = Configuration["Tokens:Audience"],
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])),
+                    ValidateLifetime = true
+                }
+            });
 
             app.UseMvc();
 
