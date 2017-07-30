@@ -6,6 +6,8 @@ using Aspnetcore.Camps.Api.ViewModels;
 using Aspnetcore.Camps.Model.Entities;
 using Aspnetcore.Camps.Model.Repositories;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -13,22 +15,27 @@ namespace Aspnetcore.Camps.Api.Controllers
 {
     [Route("api/camps/{moniker}/speakers")]
     [ValidateModel]
+    [Authorize]
     public class SpeakersController : BaseController
     {
         private readonly ILogger<SpeakersController> _logger;
         private readonly IMapper _mapper;
         private readonly ICampRepository _repository;
+        private readonly UserManager<CampUser> _userMgr;
 
         public SpeakersController(ICampRepository repository,
             ILogger<SpeakersController> logger,
-            IMapper mapper)
+            IMapper mapper,
+            UserManager<CampUser> userMgr)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
+            _userMgr = userMgr;
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Get(string moniker, bool includeTalks = false)
         {
             var speakers = includeTalks
@@ -59,12 +66,16 @@ namespace Aspnetcore.Camps.Api.Controllers
                 var speaker = _mapper.Map<Speaker>(model);
                 speaker.Camp = camp;
 
-                _repository.Add(speaker);
-
-                if (await _repository.SaveAllAsync())
+                var campUser = await _userMgr.FindByNameAsync(this.User.Identity.Name);
+                if (campUser != null)
                 {
-                    var url = Url.Link("GetSpeaker", new {moniker = camp.Moniker, id = speaker.Id});
-                    return Created(url, _mapper.Map<SpeakerViewModel>(speaker));
+                    _repository.Add(speaker);
+
+                    if (await _repository.SaveAllAsync())
+                    {
+                        var url = Url.Link("GetSpeaker", new {moniker = camp.Moniker, id = speaker.Id});
+                        return Created(url, _mapper.Map<SpeakerViewModel>(speaker));
+                    }
                 }
             }
             catch (Exception ex)
@@ -83,6 +94,8 @@ namespace Aspnetcore.Camps.Api.Controllers
                 var speaker = _repository.GetSpeaker(id);
                 if (speaker == null) return NotFound();
                 if (speaker.Camp.Moniker != moniker) return BadRequest("Speaker and Camp do not match");
+
+                if (speaker.User.UserName != this.User.Identity.Name) return Forbid();
 
                 _mapper.Map(model, speaker);
 
@@ -107,6 +120,8 @@ namespace Aspnetcore.Camps.Api.Controllers
                 var speaker = _repository.GetSpeaker(id);
                 if (speaker == null) return NotFound();
                 if (speaker.Camp.Moniker != moniker) return BadRequest("Speaker and Camp do not match");
+
+                if (speaker.User.UserName != this.User.Identity.Name) return Forbid();
 
                 _repository.Delete(speaker);
 

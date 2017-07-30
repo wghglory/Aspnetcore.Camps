@@ -6,6 +6,7 @@ using Aspnetcore.Camps.Api.ViewModels;
 using Aspnetcore.Camps.Model.Entities;
 using Aspnetcore.Camps.Model.Repositories;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -13,8 +14,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Aspnetcore.Camps.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
-    [ValidateModel]  
+    [ValidateModel]
     [EnableCors("AnyGET")]
     public class CampsController : BaseController
     {

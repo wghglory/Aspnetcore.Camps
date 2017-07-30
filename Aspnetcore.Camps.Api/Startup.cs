@@ -6,6 +6,7 @@ using Aspnetcore.Camps.Model;
 using Aspnetcore.Camps.Model.Entities;
 using Aspnetcore.Camps.Model.Repositories;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -47,22 +48,7 @@ namespace Aspnetcore.Camps.Api
             services.AddScoped<ICampRepository, CampRepository>();
 
             services.AddTransient<CampDbInitializer>();
-
-            services.AddMvc(opt =>
-                {
-//                    // use Windows Visual Studio to enable ssl 
-//                    // http will redirect to https
-//                    if (!Env.IsProduction())
-//                    {
-//                        opt.SslPort = 44388;
-//                    }
-//                    opt.Filters.Add(new RequireHttpsAttribute()); //support ssl
-                })
-                .AddJsonOptions(opt =>
-                {
-                    opt.SerializerSettings.ReferenceLoopHandling =
-                        ReferenceLoopHandling.Ignore;
-                });
+            services.AddTransient<CampIdentityInitializer>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -85,12 +71,59 @@ namespace Aspnetcore.Camps.Api
                         .AllowAnyOrigin();
                 });
             });
+
+            // add identity
+            services.AddIdentity<CampUser, IdentityRole>().AddEntityFrameworkStores<CampContext>();
+
+            // config identity option, return corresponding code
+            services.Configure<IdentityOptions>(config =>
+            {
+                config.Cookies.ApplicationCookie.Events =
+                    new CookieAuthenticationEvents()
+                    {
+                        OnRedirectToLogin = (ctx) =>
+                        {
+                            if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200)
+                            {
+                                ctx.Response.StatusCode = 401;
+                            }
+
+                            return Task.CompletedTask;
+                        },
+                        OnRedirectToAccessDenied = (ctx) =>
+                        {
+                            if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200)
+                            {
+                                ctx.Response.StatusCode = 403;
+                            }
+
+                            return Task.CompletedTask;
+                        }
+                    };
+            });
+
+            services.AddMvc(opt =>
+                {
+//                    // use Windows Visual Studio to enable ssl 
+//                    // http will redirect to https
+//                    if (!Env.IsProduction())
+//                    {
+//                        opt.SslPort = 44388;
+//                    }
+//                    opt.Filters.Add(new RequireHttpsAttribute()); //support ssl
+                })
+                .AddJsonOptions(opt =>
+                {
+                    opt.SerializerSettings.ReferenceLoopHandling =
+                        ReferenceLoopHandling.Ignore;
+                });
         }
 
         public void Configure(IApplicationBuilder app,
             IHostingEnvironment env,
             ILoggerFactory loggerFactory,
-            CampDbInitializer campDbInitializer)
+            CampDbInitializer campDbInitializer,
+            CampIdentityInitializer campIdentityInitializer)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -103,9 +136,12 @@ namespace Aspnetcore.Camps.Api
                     .WithOrigins("http://wildermuth.com");
             });*/
 
+            app.UseIdentity();
+
             app.UseMvc();
 
             campDbInitializer.Seed().Wait();
+            campIdentityInitializer.Seed().Wait();
         }
     }
 }
