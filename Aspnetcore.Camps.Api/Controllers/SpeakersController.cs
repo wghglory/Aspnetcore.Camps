@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Aspnetcore.Camps.Api.Filters;
 using Aspnetcore.Camps.Api.ViewModels;
@@ -16,43 +17,58 @@ namespace Aspnetcore.Camps.Api.Controllers
     [Route("api/camps/{moniker}/speakers")]
     [ValidateModel]
     [Authorize]
+    [ApiVersion("1.0")]
+    [ApiVersion("1.1")]
     public class SpeakersController : BaseController
     {
-        private readonly ILogger<SpeakersController> _logger;
-        private readonly IMapper _mapper;
-        private readonly ICampRepository _repository;
-        private readonly UserManager<CampUser> _userMgr;
+        protected readonly ILogger<SpeakersController> Logger;
+        protected readonly IMapper Mapper;
+        protected readonly ICampRepository Repository;
+        protected readonly UserManager<CampUser> UserMgr;
 
         public SpeakersController(ICampRepository repository,
             ILogger<SpeakersController> logger,
             IMapper mapper,
             UserManager<CampUser> userMgr)
         {
-            _repository = repository;
-            _logger = logger;
-            _mapper = mapper;
-            _userMgr = userMgr;
+            Repository = repository;
+            Logger = logger;
+            Mapper = mapper;
+            UserMgr = userMgr;
         }
 
         [HttpGet]
         [AllowAnonymous]
+        [MapToApiVersion("1.0")]
         public IActionResult Get(string moniker, bool includeTalks = false)
         {
             var speakers = includeTalks
-                ? _repository.GetSpeakersByMonikerWithTalks(moniker)
-                : _repository.GetSpeakersByMoniker(moniker);
+                ? Repository.GetSpeakersByMonikerWithTalks(moniker)
+                : Repository.GetSpeakersByMoniker(moniker);
 
-            return Ok(_mapper.Map<IEnumerable<SpeakerViewModel>>(speakers));
+            return Ok(Mapper.Map<IEnumerable<SpeakerViewModel>>(speakers));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [MapToApiVersion("1.1")]
+        public virtual IActionResult GetWithCount(string moniker, bool includeTalks = false)
+        {
+            var speakers = includeTalks
+                ? Repository.GetSpeakersByMonikerWithTalks(moniker)
+                : Repository.GetSpeakersByMoniker(moniker);
+
+            return Ok(new {count = speakers.Count(), results = Mapper.Map<IEnumerable<SpeakerViewModel>>(speakers)});
         }
 
         [HttpGet("{id}", Name = "GetSpeaker")]
         public IActionResult Get(string moniker, int id, bool includeTalks = false)
         {
-            var speaker = includeTalks ? _repository.GetSpeakerWithTalks(id) : _repository.GetSpeaker(id);
+            var speaker = includeTalks ? Repository.GetSpeakerWithTalks(id) : Repository.GetSpeaker(id);
             if (speaker == null) return NotFound();
             if (speaker.Camp.Moniker != moniker) return BadRequest("Speaker not in specified Camp");
 
-            return Ok(_mapper.Map<SpeakerViewModel>(speaker));
+            return Ok(Mapper.Map<SpeakerViewModel>(speaker));
         }
 
         [HttpPost]
@@ -60,27 +76,27 @@ namespace Aspnetcore.Camps.Api.Controllers
         {
             try
             {
-                var camp = _repository.GetCampByMoniker(moniker);
+                var camp = Repository.GetCampByMoniker(moniker);
                 if (camp == null) return BadRequest("Could not find camp");
 
-                var speaker = _mapper.Map<Speaker>(model);
+                var speaker = Mapper.Map<Speaker>(model);
                 speaker.Camp = camp;
 
-                var campUser = await _userMgr.FindByNameAsync(this.User.Identity.Name);
+                var campUser = await UserMgr.FindByNameAsync(this.User.Identity.Name);
                 if (campUser != null)
                 {
-                    _repository.Add(speaker);
+                    Repository.Add(speaker);
 
-                    if (await _repository.SaveAllAsync())
+                    if (await Repository.SaveAllAsync())
                     {
                         var url = Url.Link("GetSpeaker", new {moniker = camp.Moniker, id = speaker.Id});
-                        return Created(url, _mapper.Map<SpeakerViewModel>(speaker));
+                        return Created(url, Mapper.Map<SpeakerViewModel>(speaker));
                     }
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception thrown while adding speaker: {ex}");
+                Logger.LogError($"Exception thrown while adding speaker: {ex}");
             }
 
             return BadRequest("Could not add new speaker");
@@ -91,22 +107,22 @@ namespace Aspnetcore.Camps.Api.Controllers
         {
             try
             {
-                var speaker = _repository.GetSpeaker(id);
+                var speaker = Repository.GetSpeaker(id);
                 if (speaker == null) return NotFound();
                 if (speaker.Camp.Moniker != moniker) return BadRequest("Speaker and Camp do not match");
 
                 if (speaker.User.UserName != this.User.Identity.Name) return Forbid();
 
-                _mapper.Map(model, speaker);
+                Mapper.Map(model, speaker);
 
-                if (await _repository.SaveAllAsync())
+                if (await Repository.SaveAllAsync())
                 {
-                    return Ok(_mapper.Map<SpeakerViewModel>(speaker));
+                    return Ok(Mapper.Map<SpeakerViewModel>(speaker));
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception thrown while updating speaker: {ex}");
+                Logger.LogError($"Exception thrown while updating speaker: {ex}");
             }
 
             return BadRequest("Could not update speaker");
@@ -117,22 +133,22 @@ namespace Aspnetcore.Camps.Api.Controllers
         {
             try
             {
-                var speaker = _repository.GetSpeaker(id);
+                var speaker = Repository.GetSpeaker(id);
                 if (speaker == null) return NotFound();
                 if (speaker.Camp.Moniker != moniker) return BadRequest("Speaker and Camp do not match");
 
                 if (speaker.User.UserName != this.User.Identity.Name) return Forbid();
 
-                _repository.Delete(speaker);
+                Repository.Delete(speaker);
 
-                if (await _repository.SaveAllAsync())
+                if (await Repository.SaveAllAsync())
                 {
                     return Ok();
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Exception thrown while deleting speaker: {ex}");
+                Logger.LogError($"Exception thrown while deleting speaker: {ex}");
             }
 
             return BadRequest("Could not delete speaker");

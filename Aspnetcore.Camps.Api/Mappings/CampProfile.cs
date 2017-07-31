@@ -27,12 +27,19 @@ namespace Aspnetcore.Camps.Api.Mappings
                     PostalCode = vm.LocationPostalCode,
                     Country = vm.LocationCountry
                 }))
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); // ignore null fields of source when mapping
+                .ForAllMembers(opts =>
+                    opts.Condition((src, dest, srcMember) =>
+                        srcMember != null)); // ignore null fields of source when mapping
 
             CreateMap<Speaker, SpeakerViewModel>()
                 .ForMember(s => s.Url, opt => opt.ResolveUsing<SpeakerUrlResolver>())
                 .ReverseMap()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<Speaker, Speaker2ViewModel>()
+                .IncludeBase<Speaker, SpeakerViewModel>()
+                .ForMember(s => s.BadgeName, opt => opt.ResolveUsing(s => $"{s.Name} (@{s.TwitterName})"));
+
 
             CreateMap<Talk, TalkViewModel>()
                 .ForMember(s => s.Url, opt => opt.ResolveUsing<TalkUrlResolver>())

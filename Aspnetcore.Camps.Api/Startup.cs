@@ -1,5 +1,7 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
+using Aspnetcore.Camps.Api.Controllers;
+using Aspnetcore.Camps.Api.ViewModels;
 using Aspnetcore.Camps.Model;
 using Aspnetcore.Camps.Model.Entities;
 using Aspnetcore.Camps.Model.Repositories;
@@ -9,12 +11,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
 
 namespace Aspnetcore.Camps.Api
 {
@@ -51,6 +56,32 @@ namespace Aspnetcore.Camps.Api
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddAutoMapper();
+
+            // api verisioning
+            services.AddApiVersioning(cfg =>
+            {
+                cfg.DefaultApiVersion = new ApiVersion(1, 1);
+                cfg.AssumeDefaultVersionWhenUnspecified = true;
+                cfg.ReportApiVersions = true;
+
+                // support both
+                cfg.ApiVersionReader = ApiVersionReader.Combine(new QueryStringApiVersionReader("ver"),
+                    new HeaderApiVersionReader(
+                        "Camp-Version")); //QueryStringOrHeaderApiVersionReader is removed(https://github.com/Microsoft/aspnet-api-versioning/releases)
+
+                // way 1: add versioning on controller and actions
+                
+                //---
+                
+                // way 2: Using Versioning Conventions
+                cfg.Conventions.Controller<TalksController>()
+                    .HasApiVersion(new ApiVersion(1, 0))
+                    .HasApiVersion(new ApiVersion(1, 1))
+                    .HasApiVersion(new ApiVersion(2, 0))
+                    .Action(m => m.Post(default(string), default(int), default(TalkViewModel)))
+                    .MapToApiVersion(new ApiVersion(2, 0));
+            });
+
 
             // create cors policy, any controller/action can use these policies
             services.AddCors(cfg =>
