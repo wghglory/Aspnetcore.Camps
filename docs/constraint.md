@@ -240,3 +240,169 @@ namespace Aspnetcore.Camps.Api.Controllers
 }
 ```
 
+### Links
+
+I'm not a big fan of returning Api links since you may return too much data. But sometimes you may need them.
+
+```csharp
+namespace Aspnetcore.Camps.Api.ViewModels
+{
+    public class LinkModel
+    {
+        public string Href { get; set; }
+        public string Rel { get; set; }
+        public string Verb { get; set; } = "GET";
+    }
+}
+```
+
+TalkViewModel
+
+```diff
+namespace Aspnetcore.Camps.Api.ViewModels
+{
+    public class TalkViewModel
+    {
+        public string Url { get; set; }
+
+        [Required]
+        public string Title { get; set; }
+
+        [Required]
+        public string Abstract { get; set; }
+
+        [Required]
+        public string Category { get; set; }
+
+        public string Level { get; set; }
+        public string Prerequisites { get; set; }
+        public DateTime StartingTime { get; set; } = DateTime.Now;
+        public string Room { get; set; }
+
+        // 如果要返回一些api patch/put等接口地址
++        public ICollection<LinkModel> Links { get; set; }
+    }
+}
+```
+
+CampsProfile.cs
+
+```csharp
+CreateMap<Talk, TalkViewModel>()
+    .ForMember(s => s.Url, opt => opt.ResolveUsing<TalkUrlResolver>())
+    .ForMember(s => s.Links, opt => opt.ResolveUsing<TalkLinksResolver>())
+```
+
+```csharp
+using System.Collections.Generic;
+using Aspnetcore.Camps.Api.Controllers;
+using Aspnetcore.Camps.Api.ViewModels;
+using Aspnetcore.Camps.Model.Entities;
+using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Aspnetcore.Camps.Api.Mappings
+{
+    public class TalkLinksResolver : IValueResolver<Talk, TalkViewModel, ICollection<LinkModel>>
+    {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public TalkLinksResolver(IHttpContextAccessor httpContextAccessor)
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        public ICollection<LinkModel> Resolve(Talk source, TalkViewModel destination, ICollection<LinkModel> destMember,
+            ResolutionContext context)
+        {
+            var url = (IUrlHelper) _httpContextAccessor.HttpContext.Items[BaseController.Urlhelper];
+
+            return new List<LinkModel>()
+            {
+                new LinkModel()
+                {
+                    Rel = "Self",
+                    Href = url.Link("GetTalk",
+                        new {moniker = source.Speaker.Camp.Moniker, speakerId = source.Speaker.Id, id = source.Id})
+                },
+                new LinkModel()
+                {
+                    Rel = "Update",
+                    Href = url.Link("UpdateTalk",
+                        new {moniker = source.Speaker.Camp.Moniker, speakerId = source.Speaker.Id, id = source.Id}),
+                    Verb = "PUT"
+                },
+                new LinkModel()
+                {
+                    Rel = "Speaker",
+                    Href = url.Link("GetSpeaker", new {moniker = source.Speaker.Camp.Moniker, id = source.Speaker.Id})
+                },
+            };
+        }
+    }
+}
+```
+
+Request <https://localhost:44388/api/camps/ATL2016/speakers/1/talks/>
+
+Result
+
+```json
+[
+    {
+        "url": "https://localhost:44388/api/camps/ATL2016/speakers/1/talks/1",
+        "title": "How to do ASP.NET Core",
+        "abstract": "How to do ASP.NET Core",
+        "category": "Web Development",
+        "level": "100",
+        "prerequisites": "C# Experience",
+        "startingTime": "2017-07-30T14:30:00",
+        "room": "245",
+        "links": [
+            {
+                "href": "https://localhost:44388/api/camps/ATL2016/speakers/1/talks/1",
+                "rel": "Self",
+                "verb": "GET"
+            },
+            {
+                "href": "https://localhost:44388/api/camps/ATL2016/speakers/1/talks/1",
+                "rel": "Update",
+                "verb": "PUT"
+            },
+            {
+                "href": "https://localhost:44388/api/camps/ATL2016/speakers/1",
+                "rel": "Speaker",
+                "verb": "GET"
+            }
+        ]
+    },
+    {
+        "url": "https://localhost:44388/api/camps/ATL2016/speakers/1/talks/2",
+        "title": "How to do Bootstrap 4",
+        "abstract": "How to do Bootstrap 4",
+        "category": "Web Development",
+        "level": "100",
+        "prerequisites": "CSS Experience",
+        "startingTime": "2017-07-30T13:00:00",
+        "room": "246",
+        "links": [
+            {
+                "href": "https://localhost:44388/api/camps/ATL2016/speakers/1/talks/2",
+                "rel": "Self",
+                "verb": "GET"
+            },
+            {
+                "href": "https://localhost:44388/api/camps/ATL2016/speakers/1/talks/2",
+                "rel": "Update",
+                "verb": "PUT"
+            },
+            {
+                "href": "https://localhost:44388/api/camps/ATL2016/speakers/1",
+                "rel": "Speaker",
+                "verb": "GET"
+            }
+        ]
+    }
+]
+```

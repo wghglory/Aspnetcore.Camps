@@ -55,3 +55,4 @@ import test/City.postman.json to postman and run test.
 * [CORS](/docs/cors.md)
 * [Authentication and Authorization](/docs/auth.md)
 * [Versioning API](/docs/version.md)
+* [REST constraints](/docs/constraint.md)

@@ -291,9 +291,81 @@
 				{
 					"name": "https://localhost:44388/api/camps/ATL2016/speakers",
 					"request": {
+						"url": {
+							"raw": "https://localhost:44388/api/camps/ATL2016/speakers?ver=1.0",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44388",
+							"path": [
+								"api",
+								"camps",
+								"ATL2016",
+								"speakers"
+							],
+							"query": [
+								{
+									"key": "ver",
+									"value": "1.0",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3Z2hnbG9yeSIsImp0aSI6IjEzYWFkMTdiLTVjZWEtNDFjMS05NDlhLTg3N2QwNzY4OTQ2NCIsImdpdmVuX25hbWUiOiJHdWFuZ2h1aSIsImZhbWlseV9uYW1lIjoiV2FuZyIsImVtYWlsIjoiaGVsbG9AZ21haWwuY29tIiwiU3VwZXJVc2VyIjoiVHJ1ZSIsImV4cCI6MTUwMTUxMjc2NywiaXNzIjoiaHR0cDovL215Y29kZWNhbXAuaW8iLCJhdWQiOiJodHRwOi8vbXljb2RlY2FtcC5pbyJ9.k9WoYRV3nJ2_dCHsloQtyJdjcFM0H4p3nkKqyvp6cdo",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "https://localhost:44388/api/camps/ATL2016/speakers",
+					"request": {
 						"url": "https://localhost:44388/api/camps/ATL2016/speakers",
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3Z2hnbG9yeSIsImp0aSI6IjEzYWFkMTdiLTVjZWEtNDFjMS05NDlhLTg3N2QwNzY4OTQ2NCIsImdpdmVuX25hbWUiOiJHdWFuZ2h1aSIsImZhbWlseV9uYW1lIjoiV2FuZyIsImVtYWlsIjoiaGVsbG9AZ21haWwuY29tIiwiU3VwZXJVc2VyIjoiVHJ1ZSIsImV4cCI6MTUwMTUxMjc2NywiaXNzIjoiaHR0cDovL215Y29kZWNhbXAuaW8iLCJhdWQiOiJodHRwOi8vbXljb2RlY2FtcC5pbyJ9.k9WoYRV3nJ2_dCHsloQtyJdjcFM0H4p3nkKqyvp6cdo",
+								"description": ""
+							},
+							{
+								"key": "Camp-Version",
+								"value": "1.1",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "https://localhost:44388/api/camps/ATL2016/speakers",
+					"request": {
+						"url": "https://localhost:44388/api/camps/ATL2016/speakers",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3Z2hnbG9yeSIsImp0aSI6ImY5ZTdlZGEzLTRjODktNDgzOC05OWJjLWNjZWRhZDA2ZDhiYiIsImdpdmVuX25hbWUiOiJHdWFuZ2h1aSIsImZhbWlseV9uYW1lIjoiV2FuZyIsImVtYWlsIjoiaGVsbG9AZ21haWwuY29tIiwiU3VwZXJVc2VyIjoiVHJ1ZSIsImV4cCI6MTUwMTUxNDAwNCwiaXNzIjoiaHR0cDovL215Y29kZWNhbXAuaW8iLCJhdWQiOiJodHRwOi8vbXljb2RlY2FtcC5pbyJ9.B3qvizkyHF8TI5OKyTkSJA0BfrDUI_Ecmf6J-cfwGhs",
+								"description": ""
+							},
+							{
+								"key": "Camp-Version",
+								"value": "1.0",
+								"description": ""
+							}
+						],
 						"body": {},
 						"description": ""
 					},
@@ -377,6 +449,52 @@
 						"description": ""
 					},
 					"response": []
+				},
+				{
+					"name": "https://localhost:44388/api/camps/ATL2016/speakers/1/talks",
+					"request": {
+						"url": {
+							"raw": "https://localhost:44388/api/camps/ATL2016/speakers/1/talks?ver=2.0",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44388",
+							"path": [
+								"api",
+								"camps",
+								"ATL2016",
+								"speakers",
+								"1",
+								"talks"
+							],
+							"query": [
+								{
+									"key": "ver",
+									"value": "2.0",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "https://localhost:44388/api/camps/ATL2016/speakers/1/talks/1",
+					"request": {
+						"url": "https://localhost:44388/api/camps/ATL2016/speakers/1/talks/",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
 				}
 			]
 		},
@@ -432,7 +550,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3Z2hnbG9yeSIsImp0aSI6ImVjYWFiY2YyLWZiMjgtNGJjYS1hYjdhLTNmZjhkMzI1OWM5OCIsImdpdmVuX25hbWUiOiJHdWFuZ2h1aSIsImZhbWlseV9uYW1lIjoiV2FuZyIsImVtYWlsIjoiaGVsbG9AZ21haWwuY29tIiwiU3VwZXJVc2VyIjoiVHJ1ZSIsImV4cCI6MTUwMTQyNjk0NSwiaXNzIjoiaHR0cDovL215Y29kZWNhbXAuaW8iLCJhdWQiOiJodHRwOi8vbXljb2RlY2FtcC5pbyJ9.vo718DSMnaA6aLP9XkRQHIWPRBX0I9jichVZmK3BVDA ",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3Z2hnbG9yeSIsImp0aSI6IjEzYWFkMTdiLTVjZWEtNDFjMS05NDlhLTg3N2QwNzY4OTQ2NCIsImdpdmVuX25hbWUiOiJHdWFuZ2h1aSIsImZhbWlseV9uYW1lIjoiV2FuZyIsImVtYWlsIjoiaGVsbG9AZ21haWwuY29tIiwiU3VwZXJVc2VyIjoiVHJ1ZSIsImV4cCI6MTUwMTUxMjc2NywiaXNzIjoiaHR0cDovL215Y29kZWNhbXAuaW8iLCJhdWQiOiJodHRwOi8vbXljb2RlY2FtcC5pbyJ9.k9WoYRV3nJ2_dCHsloQtyJdjcFM0H4p3nkKqyvp6cdo",
 								"description": ""
 							}
 						],
