@@ -19,8 +19,9 @@ namespace Aspnetcore.Camps.Model.Entities
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [ConcurrencyCheck]
-        public byte[] RowVersion { get; set; }
-        
+        public byte[] RowVersion { get; set; }         // MSSql
+
+
         /*ConcurrencyCheck: we may want to configure LastName on Person to be a concurrency token. 
         This means that if one user tries to save some changes to a Person, 
         but another user has changed the LastName then an exception will be thrown. */

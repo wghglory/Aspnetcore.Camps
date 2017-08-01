@@ -100,6 +100,9 @@ namespace Aspnetcore.Camps.Api
                         .AllowAnyOrigin();
                 });
             });
+            
+            // cache
+            services.AddMemoryCache();  //store cache to current machine's memory
 
             // add identity
             services.AddIdentity<CampUser, IdentityRole>().AddEntityFrameworkStores<CampContext>();

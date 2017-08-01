@@ -43,6 +43,7 @@ namespace Aspnetcore.Camps.Api.Mappings
 
             CreateMap<Talk, TalkViewModel>()
                 .ForMember(s => s.Url, opt => opt.ResolveUsing<TalkUrlResolver>())
+                .ForMember(s => s.Links, opt => opt.ResolveUsing<TalkLinksResolver>())
                 .ReverseMap()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }

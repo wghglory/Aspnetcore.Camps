@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Aspnetcore.Camps.Api.ViewModels
@@ -20,5 +21,8 @@ namespace Aspnetcore.Camps.Api.ViewModels
         public string Prerequisites { get; set; }
         public DateTime StartingTime { get; set; } = DateTime.Now;
         public string Room { get; set; }
+
+        // 如果要返回一些api patch/put等接口地址
+        public ICollection<LinkModel> Links { get; set; }
     }
 }
