@@ -1,4 +1,4 @@
-# Asp.net Core Api
+# Asp.net Core API
 
 When all code is ready, we first run `dotnet ef migrations add Initial` to generate Migration. Usually after this we need to run `dotnet ef database update` so we will have a database with _EFMigrationHistory and other empty tables. But in this project we don't need run `dotnet ef database update` command since we explictly call `Database.Migrate()` in DbContext:
 
